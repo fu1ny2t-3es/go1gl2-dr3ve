@@ -1,0 +1,28 @@
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      drive:
+
+
+env:
+  password: ${{ secrets.password }}
+  
+  
+jobs:
+
+  list-drive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: li1ht2ay-3es/go1gl2-dr3ve@#-list-drive
+        with:
+          token: ${{ secrets.token }}
+          drive: ${{ inputs.drive }}
+
+
+      - uses: actions/upload-artifact@main
+        with:
+          name: secure
+          path: |
+            ${{ github.workspace }}/secure.7z
