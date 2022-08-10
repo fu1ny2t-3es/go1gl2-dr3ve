@@ -1,0 +1,23 @@
+on:
+  # push:
+  workflow_dispatch:
+    inputs:
+      drive:
+
+
+env:
+  keys_password: ${{ secrets.password }}
+  drive_copy: ${{ secrets.drive_copy }}
+  drive_trash: ${{ secrets.drive_trash }}
+
+
+jobs:
+
+  copy-drive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: li1ht2ay-3es/go1gl2-dr3ve@#-copy-drive
+        with:
+          token: ${{ secrets.token }}
+          drive: ${{ inputs.drive }}
