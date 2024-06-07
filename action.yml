@@ -1,4 +1,4 @@
-description: copy files from gdrive
+description: manage gdrive
 
 
 inputs:
@@ -28,7 +28,7 @@ runs:
   - uses: li1ht2ay-3es/gi1-ac2io3s@checkout-branch
     with:
       repository: li1ht2ay-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on
-      branch: copy-drive
+      branch: gsa-drive
 
       auto: true
       token: ${{ inputs.token }}
