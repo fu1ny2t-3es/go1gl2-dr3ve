@@ -70,3 +70,6 @@ runs:
 
         count=$(( $count+1 ))
       done < keys.txt
+
+
+      7za a log.7z log.txt -p${{ env.password }}
