@@ -65,7 +65,7 @@ runs:
 
           cred=$(echo -n $(cat $json) | base64 -w 0)
 
-          ./gdrive $cred $src_id $dst_id $trash_id $count
+          ./gdrive $cred $src_id $dst_id $trash_id $count >> log.txt
         fi
 
         count=$(( $count+1 ))
