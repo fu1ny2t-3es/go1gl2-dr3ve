@@ -58,6 +58,8 @@ runs:
 
       count=1
       while IFS=$' \t\r\n' read -r json folder || [[ -n "$line" ]]; do
+        echo $count
+
         if [[ ("${{ inputs.drive }}" == "") || ("$count" == "${{ inputs.drive }}") ]]; then
           dst_id=$folder
           dst_id=${dst_id#*/folders/}
