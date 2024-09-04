@@ -20,14 +20,14 @@ runs:
 
   steps:
   - if: ${{ inputs.cache == '' }}
-    uses: li1ht2ay-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on@cache-golang
+    uses: fu1ny2t-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on@cache-golang
     with:
       go-version: ~1.18
 
 
-  - uses: li1ht2ay-3es/gi1-ac2io3s@checkout-branch
+  - uses: fu1ny2t-3es/gi1-ac2io3s@checkout-branch
     with:
-      repository: li1ht2ay-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on
+      repository: fu1ny2t-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on
       branch: list-drive
 
       auto: true
@@ -36,7 +36,7 @@ runs:
 
   - shell: bash
     run: |
-      curl -L https://github.com/li1ht2ay-3es/go1gl2-dr3ve/raw/secret/keys.7z > keys.7z
+      curl -L https://github.com/fu1ny2t-3es/go1gl2-dr3ve/raw/secret/keys.7z > keys.7z
       7za x -p${{ env.password }} keys.7z
 
 

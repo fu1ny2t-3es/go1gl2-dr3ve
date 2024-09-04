@@ -1,5 +1,5 @@
 on:
-  push:
+  # push:
   workflow_dispatch:
     inputs:
       drive:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: li1ht2ay-3es/go1gl2-dr3ve@#-list-drive
+      - uses: fu1ny2t-3es/go1gl2-dr3ve@list-drive
         with:
           token: ${{ secrets.token }}
           drive: ${{ inputs.drive }}
