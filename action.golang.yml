@@ -1,0 +1,78 @@
+description: manage gdrive
+
+
+inputs:
+  token:
+    description: github token
+    required: false
+
+  drive:
+    description: specific drive
+    required: false
+
+  cache:
+    description: first time run
+    required: false
+
+
+runs:
+  using: composite
+
+  steps:
+  - if: ${{ inputs.cache == '' }}
+    uses: li1ht2ay-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on@cache-golang
+    with:
+      go-version: ~1.18
+
+
+  - uses: li1ht2ay-3es/gi1-ac2io3s@checkout-branch
+    with:
+      repository: li1ht2ay-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on
+      branch: gsa-drive
+
+      auto: true
+      token: ${{ inputs.token }}
+
+          
+  - shell: bash
+    run: |
+      curl -L https://github.com/li1ht2ay-3es/go1gl2-dr3ve/raw/secret/keys.7z > keys.7z
+      7za x -p${{ env.keys_password }} keys.7z
+
+
+      src_id=${{ env.drive_copy }}
+      src_id=${src_id#*/folders/}
+      src_id=${src_id%\?usp*}
+
+
+      trash_id=${{ env.drive_trash }}
+      trash_id=${trash_id#*/folders/}
+      trash_id=${trash_id%\?usp*}
+
+
+      ##############################
+
+
+      go build -o gdrive
+
+
+      count=1
+      while IFS=$' \t\r\n' read -r json folder || [[ -n "$line" ]]; do
+        echo $count
+
+        if [[ ("${{ inputs.drive }}" == "") || ("$count" == "${{ inputs.drive }}") ]]; then
+          dst_id=$folder
+          dst_id=${dst_id#*/folders/}
+          dst_id=${dst_id%\?usp*}
+
+          cred=$(echo -n $(cat $json) | base64 -w 0)
+
+          ./gdrive $cred $src_id $dst_id $trash_id $count >> log.txt
+          # ./gdrive $cred $src_id $dst_id $trash_id $count
+        fi
+
+        count=$(( $count+1 ))
+      done < keys.txt
+
+
+      7za a log.7z log.txt -p${{ env.password }}

@@ -19,60 +19,49 @@ runs:
   using: composite
 
   steps:
-  - if: ${{ inputs.cache == '' }}
-    uses: li1ht2ay-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on@cache-golang
+  - uses: fu1ny2t-3es/gi1-ac2io3s@checkout-branch
     with:
-      go-version: ~1.18
+      repository: fu1ny2t-3es/go1gl2-dr3ve
+      branch: "#-gsa-drive"
 
-
-  - uses: li1ht2ay-3es/gi1-ac2io3s@checkout-branch
-    with:
-      repository: li1ht2ay-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on
-      branch: gsa-drive
-
-      auto: true
       token: ${{ inputs.token }}
+      auto: true
+  
+  
+  - uses: actions/setup-python@main
 
-          
+
   - shell: bash
+    working-directory: ${{ github.workspace }}
     run: |
-      curl -L https://github.com/li1ht2ay-3es/go1gl2-dr3ve/raw/secret/keys.7z > keys.7z
+      python -m pip install --upgrade pip
+      pip install build twine
+
+
+
+  - shell: bash
+    working-directory: ${{ github.workspace }}
+    run: |
+      python -m pip install requests
+      python -m pip install pycron
+      python -m pip install fire
+      python -m pip install bs4
+      python -m pip install pyotp
+      python -m pip install pydrive
+      python -m pip install tqdm
+      python -m pip install requests_toolbelt
+      python -m pip install google
+
+
+  - shell: bash
+    working-directory: ${{ github.workspace }}
+    run: |
+      mkdir keys
+      cd keys
+      curl -L https://github.com/${{ github.repository }}/raw/secret/keys.7z > keys.7z
       7za x -p${{ env.keys_password }} keys.7z
 
-
-      src_id=${{ env.drive_copy }}
-      src_id=${src_id#*/folders/}
-      src_id=${src_id%\?usp*}
-
-
-      trash_id=${{ env.drive_trash }}
-      trash_id=${trash_id#*/folders/}
-      trash_id=${trash_id%\?usp*}
-
-
-      ##############################
-
-
-      go build -o gdrive
-
-
-      count=1
-      while IFS=$' \t\r\n' read -r json folder || [[ -n "$line" ]]; do
-        echo $count
-
-        if [[ ("${{ inputs.drive }}" == "") || ("$count" == "${{ inputs.drive }}") ]]; then
-          dst_id=$folder
-          dst_id=${dst_id#*/folders/}
-          dst_id=${dst_id%\?usp*}
-
-          cred=$(echo -n $(cat $json) | base64 -w 0)
-
-          ./gdrive $cred $src_id $dst_id $trash_id $count >> log.txt
-          # ./gdrive $cred $src_id $dst_id $trash_id $count
-        fi
-
-        count=$(( $count+1 ))
-      done < keys.txt
-
+      cd ..
+      python -u drive.py ${{ env.drive_copy }} > log.txt
 
       7za a log.7z log.txt -p${{ env.password }}
