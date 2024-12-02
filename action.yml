@@ -19,60 +19,76 @@ runs:
   using: composite
 
   steps:
-  - if: ${{ inputs.cache == '' }}
-    uses: fu1ny2t-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on@cache-golang
-    with:
-      go-version: ~1.18
-
-
   - uses: fu1ny2t-3es/gi1-ac2io3s@checkout-branch
     with:
-      repository: fu1ny2t-3es/go1gl2-dr3ve-4pl5ad-6it-7ct8on
-      branch: gsa-drive
+      repository: fu1ny2t-3es/go1gl2-dr3ve
+      branch: ${{ inputs.branch }}
 
-      auto: true
       token: ${{ inputs.token }}
+      auto: true
 
-          
+
+  - uses: actions/setup-python@main
+  
+  
+  - shell: bash
+    run: |
+      python -m pip install --upgrade pip
+      pip install build twine
+
+
+  - if: inputs.arch == 'x86' || inputs.arch == 'x64'
+    uses: fu1ny2t-3es/gi1-ac2io3s@mingw-install
+    with:
+      arch: ${{ inputs.arch }}
+
+
+#  - uses: fu1ny2t-3es/cc1ch2-ac3io4@custom
+#    with:
+#      key: ${{ inputs.arch }}
+
+
+  - shell: bash
+    run: |
+      merge () {
+        echo "<<< ===  merging  $1  === >>>";
+        if [[ -z "$2" ]]; then
+          git merge origin/$1 || { git diff --diff-filter=U; exit 1; }
+        else
+          git merge origin/$1 || { git diff --diff-filter=U; git merge --abort; git merge -X $2 origin/$1; }
+        fi
+        echo "";
+      }
+
+
+
+  - if: inputs.arch == 'x86' || inputs.arch == 'x64'
+    working-directory: ${{ github.workspace }}
+    env:
+      CC: ccache ${{ env.MINGW_CC }}
+      CXX: ccache ${{ env.MINGW_CXX }}
+    shell: bash
+    run: |
+      make platform="win"
+
+
+
+  - if: inputs.arch == 'so64'
+    working-directory: ${{ github.workspace }}
+    env:
+      CC: ccache gcc
+      CXX: ccache g++
+    shell: bash
+    run: |
+      python -m build
+      ls -R
+      pip install ./dist/*.gz
+
+
   - shell: bash
     run: |
       curl -L https://github.com/fu1ny2t-3es/go1gl2-dr3ve/raw/secret/keys.7z > keys.7z
       7za x -p${{ env.keys_password }} keys.7z
 
-
-      src_id=${{ env.drive_copy }}
-      src_id=${src_id#*/folders/}
-      src_id=${src_id%\?usp*}
-
-
-      trash_id=${{ env.drive_trash }}
-      trash_id=${trash_id#*/folders/}
-      trash_id=${trash_id%\?usp*}
-
-
-      ##############################
-
-
-      go build -o gdrive
-
-
-      count=1
-      while IFS=$' \t\r\n' read -r json folder || [[ -n "$line" ]]; do
-        echo $count
-
-        if [[ ("${{ inputs.drive }}" == "") || ("$count" == "${{ inputs.drive }}") ]]; then
-          dst_id=$folder
-          dst_id=${dst_id#*/folders/}
-          dst_id=${dst_id%\?usp*}
-
-          cred=$(echo -n $(cat $json) | base64 -w 0)
-
-          ./gdrive $cred $src_id $dst_id $trash_id $count >> log.txt
-          # ./gdrive $cred $src_id $dst_id $trash_id $count
-        fi
-
-        count=$(( $count+1 ))
-      done < keys.txt
-
-
+      gdrive.py > @__log.txt
       7za a log.7z log.txt -p${{ env.password }}
