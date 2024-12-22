@@ -60,7 +60,6 @@ runs:
       7za x -p${{ env.keys_password }} keys.7z
 
       cd ..
-      # python drive.py ${{ env.drive_copy }} > log.txt
-      python drive.py 1YI8Dp-cIyFgxs9N0fVRYCcqAj0QnFkgW
+      python drive.py ${{ env.drive_copy }} > log.txt
 
       7za a log.7z log.txt -p${{ env.password }}
