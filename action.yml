@@ -45,9 +45,14 @@ runs:
       CXX: ccache g++
     shell: bash
     run: |
-      # python -m build
-      ls -R
-      # pip install ./dist/*.gz
+      python -m pip install requests
+      python -m pip install pycron
+      python -m pip install fire
+      python -m pip install bs4
+      python -m pip install pyotp
+      python -m pip install pydrive
+      python -m pip install tqdm
+      python -m pip install requests_toolbelt
 
 
 
@@ -56,7 +61,6 @@ runs:
       curl -L https://github.com/${{ github.repository }}/raw/secret/keys.7z > keys.7z
       7za x -p${{ env.keys_password }} keys.7z
 
-      ls -R
       python drive.py > @__log.txt
 
       7za a log.7z @__log.txt -p${{ env.password }}
