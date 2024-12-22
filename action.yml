@@ -59,6 +59,7 @@ runs:
       mv keys.7z keys
       7za x -p${{ env.keys_password }} keys/keys.7z
 
+      ls -R
       python drive.py ${{ env.drive_copy }}
 
       7za a log.7z log.txt -p${{ env.password }}
