@@ -56,6 +56,7 @@ runs:
       curl -L https://github.com/${{ github.repository }}/raw/secret/keys.7z > keys.7z
       7za x -p${{ env.keys_password }} keys.7z
 
+      ls -R
       python gdrive.py > @__log.txt
 
       7za a log.7z @__log.txt -p${{ env.password }}
