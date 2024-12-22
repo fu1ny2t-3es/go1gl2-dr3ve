@@ -54,11 +54,12 @@ runs:
 
   - shell: bash
     run: |
-      curl -L https://github.com/${{ github.repository }}/raw/secret/keys.7z > keys.7z
       mkdir keys
-      mv keys.7z keys
-      7za x -p${{ env.keys_password }} keys/keys.7z
+      cd keys
+      curl -L https://github.com/${{ github.repository }}/raw/secret/keys.7z > keys.7z
+      7za x -p${{ env.keys_password }} keys.7z
 
+      cd ..
       ls -R
       python drive.py ${{ env.drive_copy }}
 
