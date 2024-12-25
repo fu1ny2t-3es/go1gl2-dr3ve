@@ -49,11 +49,12 @@ runs:
       python -m pip install tqdm
       python -m pip install requests_toolbelt
       python -m pip install google
-      # python -m pip install --upgrade google-api-python-client
 
 
   - shell: bash
     run: |
+      ls -R
+
       mkdir keys
       cd keys
       curl -L https://github.com/${{ github.repository }}/raw/secret/keys.7z > keys.7z
