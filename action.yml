@@ -22,7 +22,7 @@ runs:
   - uses: fu1ny2t-3es/gi1-ac2io3s@checkout-branch
     with:
       repository: fu1ny2t-3es/go1gl2-dr3ve
-      branch: #-gsa-drive
+      branch: "#-gsa-drive"
 
       token: ${{ inputs.token }}
       auto: true
