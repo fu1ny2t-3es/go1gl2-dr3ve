@@ -7,6 +7,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from tqdm import tqdm
 from datetime import datetime
+from time import sleep
 
 
 scope = "https://www.googleapis.com/auth/drive"
@@ -71,6 +72,15 @@ def gdrive(drive_json, drive_folder):
                 err = service.files().delete(fileId=i['id']).execute()
                 if err:
                     print("deleting file failed with error: " + err)
+
+                old_size = drive_size
+                while old_size == drive_size:
+                    about = service.about().get(fields="storageQuota").execute()
+                    quota = about['storageQuota']
+
+                    drive_size = int(quota['limit']) - int(quota['usage'])
+                    sleep(10)
+
             else:
                 print(i['name'] + '     ' + 'https://drive.google.com/file/d/' + i['id'] + '/view?usp=sharing')
 
@@ -118,6 +128,14 @@ def gdrive(drive_json, drive_folder):
                         moved_file = {'name': '@__' + i['name']}
                         service.files().update(fileId=i['id'], body=moved_file).execute()
 
+                        old_size = drive_size
+                        while old_size == drive_size:
+                            about = service.about().get(fields="storageQuota").execute()
+                            quota = about['storageQuota']
+
+                            drive_size = int(quota['limit']) - int(quota['usage'])
+                            sleep(10)
+
                     except Exception as err:
                         print(err)
                         print(f"File error {i['name']}  [{i['size']} / {drive_size}]")
@@ -151,6 +169,7 @@ def gdrive(drive_json, drive_folder):
             print(err)
 
         # sys.exit(1)
+
 
 
 def missing_input(input_name):
